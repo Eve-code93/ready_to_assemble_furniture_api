@@ -1,4 +1,4 @@
-#!/mnt/c/Users/USER/Desktop/furniture_api/furniture_api/venv/bin/python3.12
+#!/mnt/c/Users/USER/Desktop/ready_to_assemble_furniture_api/furniture_api/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
