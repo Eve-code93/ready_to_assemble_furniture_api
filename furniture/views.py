@@ -12,6 +12,15 @@ from .serializers import (
     ReviewSerializer, CustomizationSerializer, WishlistSerializer, 
     PromotionSerializer, OrderPromotionSerializer, AssemblyGuideSerializer
 )
+from django.http import JsonResponse
+from django.shortcuts import render
+#filtering and search
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from rest_framework import viewsets
+from .models import Furniture
+from .serializers import FurnitureSerializer
+
 
 # User ViewSet
 class UserViewSet(viewsets.ModelViewSet):
@@ -84,3 +93,15 @@ from django.shortcuts import render
 
 def home(request):
     return render(request, 'home.html')
+
+
+#filtering and search
+class FurnitureViewSet(viewsets.ModelViewSet):
+    queryset = Furniture.objects.all()
+    serializer_class = FurnitureSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    
+    # Define filter fields
+    filterset_fields = ['category', 'price']
+    search_fields = ['name', 'description']
+    ordering_fields = ['price', 'name']

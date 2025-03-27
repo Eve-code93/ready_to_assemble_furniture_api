@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'furniture',
     'rest_framework',
     "rest_framework_simplejwt",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -92,6 +93,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+
 
 
 
