@@ -28,3 +28,14 @@ urlpatterns = [
     path('', home, name='home'),  # Homepage
     path('api/', include(router.urls)),  # Include all API endpoints under /api/
 ]
+
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('accounts/', include('allauth.urls')),  # Required for email verification
+]

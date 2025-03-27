@@ -41,7 +41,19 @@ INSTALLED_APPS = [
     'rest_framework',
     "rest_framework_simplejwt",
     "django_filters",
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # For Google authentication
+    'allauth.socialaccount.providers.github',  # For GitHub authentication
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+ 
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,7 +63,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware", 
 ]
+
+
 
 ROOT_URLCONF = 'furniture_api.urls'
 
@@ -163,3 +178,21 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'furniture.User'
+
+# Email Backend (for development, use console backend)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'no-reply@example.com'
+
+# Allauth Settings
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Enforce email verification
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # Allow clicking the verification link once received
+ACCOUNT_USERNAME_REQUIRED = False  # Disable username requirement if using email login
+
+SITE_ID = 1  # Required for django-allauth
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]

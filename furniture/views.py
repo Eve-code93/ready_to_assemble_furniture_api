@@ -105,3 +105,18 @@ class FurnitureViewSet(viewsets.ModelViewSet):
     filterset_fields = ['category', 'price']
     search_fields = ['name', 'description']
     ordering_fields = ['price', 'name']
+
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAdmin, IsSeller
+from .models import Furniture
+from .serializers import FurnitureSerializer
+
+class FurnitureViewSet(ModelViewSet):
+    queryset = Furniture.objects.all()
+    serializer_class = FurnitureSerializer
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'destroy']:  # Restrict these actions
+            return [IsAuthenticated(), IsSeller()]
+        return [IsAuthenticated()]
