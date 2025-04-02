@@ -104,16 +104,17 @@ DATABASES = {
         #'NAME': BASE_DIR / 'db.sqlite3',
      
    #postgres database
-   
+   DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'furniture_db',
         'USER': 'furniture_user',
         'PASSWORD': 'mutijose97!',
-        'HOST': 'localhost',
+        'HOST': 'dpg-cvmng66uk2gs73a1fgh0-a',
         'PORT': '5432',
     }
 }
+
 
 
 
