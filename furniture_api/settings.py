@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,20 +38,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'furniture',
-    'rest_framework',
-    "rest_framework_simplejwt",
-    "django_filters",
     'django.contrib.sites',
+    
+    # Third-party apps
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'django_filters',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',  # For Google authentication
-    'allauth.socialaccount.providers.github',  # For GitHub authentication
-    'rest_framework.authtoken',
     'dj_rest_auth',
     'dj_rest_auth.registration',
- 
+    
+    # Social providers (keep only what you need)
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    
+    # Your app
+    'furniture',
 ]
 
 
@@ -175,7 +181,21 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+  
+
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        # Optional: Add this back if you want browsable API
+        # 'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
 }
+
 
 AUTH_USER_MODEL = 'furniture.User'
 

@@ -1,0 +1,11 @@
+{% load rest_framework %}
+
+<form class="form-inline" action="" method="get">
+  {% for field in filter.form %}
+    <div class="form-group">
+      {{ field.label_tag }}
+      {{ field }}
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">Filter</button>
+</form>

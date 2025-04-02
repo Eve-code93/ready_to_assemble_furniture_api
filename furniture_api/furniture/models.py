@@ -8,6 +8,26 @@ class User(AbstractUser):
     address = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    ADMIN = 'admin'
+    SELLER = 'seller'
+    CUSTOMER = 'customer'
+
+    ROLE_CHOICES = [
+        (ADMIN, 'Admin'),
+        (SELLER, 'Seller'),
+        (CUSTOMER, 'Customer'),
+    ]
+
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=CUSTOMER)
+
+    def is_admin(self):
+        return self.role == self.ADMIN
+
+    def is_seller(self):
+        return self.role == self.SELLER
+
+    def is_customer(self):
+        return self.role == self.CUSTOMER
 
     def __str__(self):
         return self.username  
@@ -15,6 +35,7 @@ class User(AbstractUser):
 class Furniture(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
+    category = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
