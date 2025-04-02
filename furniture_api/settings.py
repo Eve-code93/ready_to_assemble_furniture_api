@@ -99,26 +99,15 @@ WSGI_APPLICATION = 'furniture_api.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    #'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
-     
-   #postgres database
-   DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'furniture_db',
         'USER': 'furniture_user',
         'PASSWORD': 'mutijose97!',
-        'HOST': 'dpg-cvmng66uk2gs73a1fgh0-a',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
-
-
-
-
 
 
 
