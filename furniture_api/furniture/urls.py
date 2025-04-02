@@ -25,4 +25,5 @@ router.register(r'assembly-guides', AssemblyGuideViewSet)
 urlpatterns = [
     path('', home, name='home'),  # Root URL
     path('', include(router.urls)),  # All API endpoints at root
+    
 ]
