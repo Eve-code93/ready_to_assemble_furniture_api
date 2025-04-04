@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'furniture',
 ]
 
+SITE_ID = 1 
 
 
 MIDDLEWARE = [
@@ -101,14 +102,13 @@ WSGI_APPLICATION = 'furniture_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'furniture_db',
-        'USER': 'furniture_user',
-        'PASSWORD': 'mutijose97!',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'furnituredb_7ffy',  # Database name
+        'USER': 'furnituredb_7ffy_user',  # Username
+        'PASSWORD': 'lcNqHRd9BI8ejYHOvcon3iARUp5Jlj9L',  # Replace with your actual password
+        'HOST': 'dpg-cvmng66uk2gs73a1fgh0-a',  # Hostname
+        'PORT': '5432',  # Default PostgreSQL port
     }
 }
-
 
 
 # Password validation

@@ -23,4 +23,7 @@ urlpatterns = [
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
     re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email, name='account_confirm_email'),
+
+    path('accounts/', include('allauth.urls')),
+
 ]
