@@ -14,16 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from allauth.account.views import confirm_email
-from django.urls import include, path, re_path
+from django.contrib import admin
+from django.urls import path, include
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('furniture.urls')),
-    path('api/auth/', include('dj_rest_auth.urls')),
-    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
-    re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email, name='account_confirm_email'),
+    path('', include('furniture.urls')),  # Include the furniture app URLs
 
-    path('accounts/', include('allauth.urls')),
-
+    path('auth/', include('dj_rest_auth.urls')),  # Login, Logout, Password reset, etc.
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),  # User registration
 ]
+

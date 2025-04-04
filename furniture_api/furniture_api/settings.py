@@ -37,13 +37,30 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'furniture',
+    'django.contrib.sites',
+    
+    # Third-party apps
     'rest_framework',
-    "rest_framework_simplejwt",
-    "django_filters",
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'django_filters',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    
+    # Social providers (keep only what you need)
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    
+    # Your app
+    'furniture',
 ]
 
 MIDDLEWARE = [
+    'allauth.account.middleware.AccountMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

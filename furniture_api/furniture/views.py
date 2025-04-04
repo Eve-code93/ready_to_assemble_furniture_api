@@ -1,8 +1,8 @@
+from django.shortcuts import render
+
+# Create your views here.
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from rest_framework.pagination import PageNumberPagination
 from .models import (
     User, Furniture, Order, Inventory, Review, 
     Customization, Wishlist, Promotion, OrderPromotion, AssemblyGuide
@@ -12,89 +12,111 @@ from .serializers import (
     ReviewSerializer, CustomizationSerializer, WishlistSerializer, 
     PromotionSerializer, OrderPromotionSerializer, AssemblyGuideSerializer
 )
-from .permissions import IsAdmin, IsSeller
+from django.http import JsonResponse
+from django.shortcuts import render
+#filtering and search
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from rest_framework import viewsets
+from .models import Furniture
+from .serializers import FurnitureSerializer
 
-# Pagination Class
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 10  # Adjust page size as per requirement
-    page_size_query_param = 'page_size'  # Allow users to set page size
-    max_page_size = 100  # Limit max page size
 
-# User ViewSet (Public Access)
+# User ViewSet
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]  # Anyone can register
 
-# Furniture ViewSet with Filtering, Searching, and Pagination
+# Furniture ViewSet
 class FurnitureViewSet(viewsets.ModelViewSet):
     queryset = Furniture.objects.all()
     serializer_class = FurnitureSerializer
-    permission_classes = [AllowAny]  # Open to all users (adjust as needed)
-    pagination_class = StandardResultsSetPagination  # Apply pagination
+    permission_classes = [AllowAny]  # Open to all users
 
-    # Enable filtering, search, and ordering
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['category', 'price']  # Enable filtering by category and price
-    search_fields = ['name', 'description']  # Enable search by name and description
-    ordering_fields = ['price', 'name']  # Enable ordering by price and name
-    ordering = ['price']  # Default ordering (if no query param is passed)
-
-    def get_permissions(self):
-        if self.action in ['create', 'update', 'destroy']:  # Restrict these actions to authenticated users
-            return [IsAuthenticated(), IsSeller()]
-        return [AllowAny()]  # Allow any user to view furniture
-
-# Order ViewSet (Authenticated Users Only)
+# Order ViewSet
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]  # Only authenticated users can manage orders
+    permission_classes = [IsAuthenticated]  # Only authenticated users can order
 
-# Inventory ViewSet (Admins Only)
+# Inventory ViewSet
 class InventoryViewSet(viewsets.ModelViewSet):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
-    permission_classes = [IsAuthenticated, IsAdmin]  # Only admins can manage inventory
+    permission_classes = [IsAuthenticated]  # Only admins should ideally manage stock
 
-# Review ViewSet (Authenticated Users Only)
+# Review ViewSet
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]  # Users must be logged in to review products
+    permission_classes = [IsAuthenticated]  # Users must be logged in to review
 
-# Customization ViewSet (Authenticated Users Only)
+# Customization ViewSet
 class CustomizationViewSet(viewsets.ModelViewSet):
     queryset = Customization.objects.all()
     serializer_class = CustomizationSerializer
-    permission_classes = [IsAuthenticated]  # Authenticated users only
+    permission_classes = [IsAuthenticated]
 
-# Wishlist ViewSet (Authenticated Users Only)
+# Wishlist ViewSet
 class WishlistViewSet(viewsets.ModelViewSet):
     queryset = Wishlist.objects.all()
     serializer_class = WishlistSerializer
-    permission_classes = [IsAuthenticated]  # Authenticated users only
+    permission_classes = [IsAuthenticated]
 
-# Promotion ViewSet (Admins Only)
+# Promotion ViewSet
 class PromotionViewSet(viewsets.ModelViewSet):
     queryset = Promotion.objects.all()
     serializer_class = PromotionSerializer
-    permission_classes = [IsAuthenticated, IsAdmin]  # Only admins can manage promotions
+    permission_classes = [IsAuthenticated]  # Admins should manage promotions
 
-# Order Promotion ViewSet (Authenticated Users Only)
+# Order Promotion ViewSet
 class OrderPromotionViewSet(viewsets.ModelViewSet):
     queryset = OrderPromotion.objects.all()
     serializer_class = OrderPromotionSerializer
-    permission_classes = [IsAuthenticated]  # Only authenticated users can manage order promotions
+    permission_classes = [IsAuthenticated]
 
-# Assembly Guide ViewSet (Admins Only)
+# Assembly Guide ViewSet
 class AssemblyGuideViewSet(viewsets.ModelViewSet):
     queryset = AssemblyGuide.objects.all()
     serializer_class = AssemblyGuideSerializer
-    permission_classes = [IsAuthenticated, IsAdmin]  # Only admins should upload guides
+    permission_classes = [IsAuthenticated]  # Admins should upload guides
 
-# Home View
+
+
 from django.http import JsonResponse
 
 def home(request):
-    return JsonResponse({"message": "Welcome to the Furniture API! Use /api/ to access the API."})
+    return JsonResponse({"message": "Welcome to the Furniture API!"})
+
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'home.html')
+
+
+#filtering and search
+class FurnitureViewSet(viewsets.ModelViewSet):
+    queryset = Furniture.objects.all()
+    serializer_class = FurnitureSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    
+    # Define filter fields
+    filterset_fields = ['category', 'price']
+    search_fields = ['name', 'description']
+    ordering_fields = ['price', 'name']
+
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAdmin, IsSeller
+from .models import Furniture
+from .serializers import FurnitureSerializer
+
+class FurnitureViewSet(ModelViewSet):
+    queryset = Furniture.objects.all()
+    serializer_class = FurnitureSerializer
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'destroy']:  # Restrict these actions
+            return [IsAuthenticated(), IsSeller()]
+        return [IsAuthenticated()]
