@@ -1,8 +1,9 @@
 from django.shortcuts import render
-
-# Create your views here.
-from rest_framework import viewsets
+from django.http import JsonResponse
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from .models import (
     User, Furniture, Order, Inventory, Review, 
     Customization, Wishlist, Promotion, OrderPromotion, AssemblyGuide
@@ -12,111 +13,75 @@ from .serializers import (
     ReviewSerializer, CustomizationSerializer, WishlistSerializer, 
     PromotionSerializer, OrderPromotionSerializer, AssemblyGuideSerializer
 )
-from django.http import JsonResponse
-from django.shortcuts import render
-#filtering and search
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from rest_framework import viewsets
-from .models import Furniture
-from .serializers import FurnitureSerializer
+from .permissions import AdminOnly 
 
-
-# User ViewSet
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]  # Anyone can register
-
-# Furniture ViewSet
-class FurnitureViewSet(viewsets.ModelViewSet):
-    queryset = Furniture.objects.all()
-    serializer_class = FurnitureSerializer
-    permission_classes = [AllowAny]  # Open to all users
-
-# Order ViewSet
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]  # Only authenticated users can order
-
-# Inventory ViewSet
-class InventoryViewSet(viewsets.ModelViewSet):
-    queryset = Inventory.objects.all()
-    serializer_class = InventorySerializer
-    permission_classes = [IsAuthenticated]  # Only admins should ideally manage stock
-
-# Review ViewSet
-class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]  # Users must be logged in to review
-
-# Customization ViewSet
-class CustomizationViewSet(viewsets.ModelViewSet):
-    queryset = Customization.objects.all()
-    serializer_class = CustomizationSerializer
-    permission_classes = [IsAuthenticated]
-
-# Wishlist ViewSet
-class WishlistViewSet(viewsets.ModelViewSet):
-    queryset = Wishlist.objects.all()
-    serializer_class = WishlistSerializer
-    permission_classes = [IsAuthenticated]
-
-# Promotion ViewSet
-class PromotionViewSet(viewsets.ModelViewSet):
-    queryset = Promotion.objects.all()
-    serializer_class = PromotionSerializer
-    permission_classes = [IsAuthenticated]  # Admins should manage promotions
-
-# Order Promotion ViewSet
-class OrderPromotionViewSet(viewsets.ModelViewSet):
-    queryset = OrderPromotion.objects.all()
-    serializer_class = OrderPromotionSerializer
-    permission_classes = [IsAuthenticated]
-
-# Assembly Guide ViewSet
-class AssemblyGuideViewSet(viewsets.ModelViewSet):
-    queryset = AssemblyGuide.objects.all()
-    serializer_class = AssemblyGuideSerializer
-    permission_classes = [IsAuthenticated]  # Admins should upload guides
-
-
-
-from django.http import JsonResponse
-
+# General views
 def home(request):
     return JsonResponse({"message": "Welcome to the Furniture API!"})
 
-from django.shortcuts import render
-
-def home(request):
+def render_home(request):
     return render(request, 'home.html')
 
+# User ViewSet
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]  # Open to all users for registration
 
-#filtering and search
-class FurnitureViewSet(viewsets.ModelViewSet):
+# Furniture ViewSet
+class FurnitureViewSet(ModelViewSet):
     queryset = Furniture.objects.all()
     serializer_class = FurnitureSerializer
+    permission_classes = [IsAuthenticated]  # Authenticated users only
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    
-    # Define filter fields
     filterset_fields = ['category', 'price']
     search_fields = ['name', 'description']
     ordering_fields = ['price', 'name']
 
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
-from .permissions import IsAdmin, IsSeller
-from .models import Furniture
-from .serializers import FurnitureSerializer
+# Order ViewSet
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]  # Restricted to authenticated users
 
-class FurnitureViewSet(ModelViewSet):
-    queryset = Furniture.objects.all()
-    serializer_class = FurnitureSerializer
+# Inventory ViewSet
+class InventoryViewSet(ModelViewSet):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
+    permission_classes = [AdminOnly]  # Only accessible by admins
 
-    def get_permissions(self):
-        if self.action in ['create', 'update', 'destroy']:  # Restrict these actions
-            return [IsAuthenticated(), IsSeller()]
-        return [IsAuthenticated()]
+# Review ViewSet
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]  # Authenticated users can add reviews
+
+# Customization ViewSet
+class CustomizationViewSet(ModelViewSet):
+    queryset = Customization.objects.all()
+    serializer_class = CustomizationSerializer
+    permission_classes = [IsAuthenticated]  # Authenticated users only
+
+# Wishlist ViewSet
+class WishlistViewSet(ModelViewSet):
+    queryset = Wishlist.objects.all()
+    serializer_class = WishlistSerializer
+    permission_classes = [IsAuthenticated]  # Authenticated users only
+
+# Promotion ViewSet
+class PromotionViewSet(ModelViewSet):
+    queryset = Promotion.objects.all()
+    serializer_class = PromotionSerializer
+    permission_classes = [AdminOnly]  # Accessible by admins only
+
+# Order Promotion ViewSet
+class OrderPromotionViewSet(ModelViewSet):
+    queryset = OrderPromotion.objects.all()
+    serializer_class = OrderPromotionSerializer
+    permission_classes = [AdminOnly]  # Restricted to admins
+
+# Assembly Guide ViewSet
+class AssemblyGuideViewSet(ModelViewSet):
+    queryset = AssemblyGuide.objects.all()
+    serializer_class = AssemblyGuideSerializer
+    permission_classes = [IsAuthenticated]  # Authenticated users can access guides
