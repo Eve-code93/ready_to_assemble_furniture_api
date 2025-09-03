@@ -1,160 +1,153 @@
-Ready-to-Assemble Furniture API
-Welcome to the Ready-to-Assemble Furniture API! This API is designed to manage users, furniture items, orders, reviews, customizations, and much more. Built using Django and Django REST Framework, it is highly scalable and offers robust CRUD functionality, role-based access control, and search/filtering capabilities.
+# Ready-to-Assemble Furniture API
 
-Features
-User Management: Register, authenticate, and manage users with roles (admin, seller, or customer).
+Welcome to the Ready-to-Assemble Furniture API!  
+This API is designed to manage users, furniture items, orders, reviews, customizations, and much more.  
+Built using **Django** and **Django REST Framework (DRF)**, it is highly scalable and offers robust CRUD functionality, role-based access control, and search/filtering capabilities.
 
-Furniture Inventory: Manage furniture details, categorized with filtering and search capabilities.
+---
 
-Order Processing: Seamless order handling with status tracking.
+## 🌍 Live Deployment  
+The API is live and accessible here:  
+👉 [https://evecoder93.pythonanywhere.com/](https://evecoder93.pythonanywhere.com/)  
 
-Wishlist: Enable users to maintain personalized wishlists.
+---
 
-Product Customizations: Support customers in personalizing furniture.
+## 🚀 Features
+- **User Management**: Register, authenticate, and manage users with roles (admin, seller, or customer).
+- **Furniture Inventory**: Manage furniture details, categorized with filtering and search capabilities.
+- **Order Processing**: Seamless order handling with status tracking.
+- **Wishlist**: Enable users to maintain personalized wishlists.
+- **Product Customizations**: Support customers in personalizing furniture.
+- **Promotions**: Add and manage discounts for sales.
+- **Reviews**: Let users share feedback through product reviews.
+- **Assembly Guides**: Provide users with downloadable instructions.
 
-Promotions: Add and manage discounts for sales.
+---
 
-Reviews: Let users share feedback through product reviews.
+## 🛠 Technologies Used
+- **Backend Framework**: Django & Django REST Framework (DRF)  
+- **Database**: PostgreSQL or SQLite (Development)  
+- **API Testing Tool**: Postman  
+- **Authentication**: JWT (JSON Web Tokens)  
 
-Assembly Guides: Provide users with downloadable instructions.
+---
 
-Technologies Used
-Backend Framework: Django & Django REST Framework (DRF)
+## ⚙️ Installation Instructions
 
-Database: PostgreSQL or SQLite (Development)
+### Prerequisites
+- Python 3.11 or higher
+- PostgreSQL (or SQLite for development)
+- Django and dependencies installed
 
-API Testing Tool: Postman
+### Steps
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Eve-code93/ready_to_assemble_furniture_api.git
+   cd ready_to_assemble_furniture_api
 
-Authentication: JWT (JSON Web Tokens)
 
-Installation Instructions
-Prerequisites
-Install Python 3.11 or higher.
-
-Set up PostgreSQL or your preferred database system.
-
-Install Django and related dependencies.
-
-Steps
-Clone the repository:
-
-bash
-git clone https://github.com/Eve-code93/ready_to_assemble_furniture_api.git
-cd ready_to_assemble_furniture_api
-Create a virtual environment:
-
-bash
+Create a virtual environment
 python -m venv env
 source env/bin/activate  # On Windows: env\Scripts\activate
-Install the required dependencies:
 
-bash
+Install dependencies
 pip install -r requirements.txt
-Create a .env file for environment variables:
 
-plaintext
+Create a .env file
 SECRET_KEY=your_secret_key
 DATABASE_URL=postgres://username:password@localhost:5432/furniture_db
 DEBUG=True
-Apply migrations:
 
-bash
+Run migrations
 python manage.py migrate
-Start the server:
 
-bash
+
+Start the server
 python manage.py runserver
+
 API Endpoints
-Below is a detailed list of API endpoints available in the project:
 
 Authentication
-POST /api/auth/login/ Authenticate a user and retrieve a JWT token.
+
+POST /api/auth/login/ – Authenticate a user and retrieve a JWT token
 
 Users
-GET /api/users/ List all users (Admin only).
 
-POST /api/users/register/ Register a new user (Open to all).
+GET /api/users/ – List all users (Admin only)
+
+POST /api/users/register/ – Register a new user
 
 Furniture
-GET /api/furniture/ Retrieve a list of furniture items. Supports filtering by category and price, search by name and description, and ordering by price or name.
 
-POST /api/furniture/ Add a new furniture item (Seller/Admin only).
+GET /api/furniture/ – Retrieve a list of furniture items (filter/search/order supported)
 
-PUT /api/furniture/<id>/ Update an existing furniture item (Seller/Admin only).
+POST /api/furniture/ – Add a new furniture item (Seller/Admin only)
 
-DELETE /api/furniture/<id>/ Delete a furniture item (Seller/Admin only).
+PUT /api/furniture/<id>/ – Update furniture (Seller/Admin only)
+
+DELETE /api/furniture/<id>/ – Delete furniture (Seller/Admin only)
 
 Orders
-GET /api/orders/ Retrieve orders for the authenticated user.
 
-POST /api/orders/ Place a new order.
+GET /api/orders/ – Retrieve orders for the authenticated user
+
+POST /api/orders/ – Place a new order
 
 Wishlist
-GET /api/wishlist/ Retrieve the authenticated user's wishlist.
 
-POST /api/wishlist/ Add an item to the wishlist.
+GET /api/wishlist/ – Get user’s wishlist
 
-DELETE /api/wishlist/<id>/ Remove an item from the wishlist.
+POST /api/wishlist/ – Add item to wishlist
+
+DELETE /api/wishlist/<id>/ – Remove item
 
 Reviews
-GET /api/reviews/ Retrieve all product reviews.
 
-POST /api/reviews/ Add a review for a product (Authenticated users only).
+GET /api/reviews/ – Get all reviews
+
+POST /api/reviews/ – Add review (Authenticated users)
 
 Promotions
-GET /api/promotions/ Retrieve active promotions.
 
-POST /api/promotions/ Add a new promotion (Admin only).
+GET /api/promotions/ – Get active promotions
 
-PUT /api/promotions/<id>/ Update a promotion (Admin only).
+POST /api/promotions/ – Add promotion (Admin only)
 
-DELETE /api/promotions/<id>/ Remove a promotion (Admin only).
+PUT /api/promotions/<id>/ – Update promotion (Admin only)
+
+DELETE /api/promotions/<id>/ – Delete promotion (Admin only)
 
 Customizations
-GET /api/customizations/ List all customizations for the authenticated user.
 
-POST /api/customizations/ Add a new customization.
+GET /api/customizations/ – List all customizations for user
+
+POST /api/customizations/ – Add customization
 
 Assembly Guides
-GET /api/assembly-guides/ Download an assembly guide for a specific furniture item (Authenticated users only).
+
+GET /api/assembly-guides/ – Download assembly guide (Authenticated users only)
+
 
 Testing the API
-Use Postman to interact with the API endpoints:
 
-Authenticate to obtain a JWT token:
-
-plaintext
+Use Postman to test endpoints.
+Example (Authentication):
 POST /api/auth/login/
 Authorization: Bearer <your_jwt_token>
-Include the token in the headers for protected routes.
 
-Test filtering, searching, and CRUD operations for resources like Furniture.
 
 Future Enhancements
-Add payment gateway integration for orders.
-
-Implement user notifications via email or SMS.
-
-Expand search capabilities using Elasticsearch.
+Payment gateway integration
+Email/SMS notifications
+Advanced search (Elasticsearch)
 
 Contributing
-Contributions are welcome! Follow these steps:
-
-Fork the repository.
-
-Create a new feature branch:
-
-bash
+Fork the repository
+Create a branch
 git checkout -b feature/<feature_name>
-Commit your changes:
+Commit changes
+git commit -m "Add new feature
+Push and submit a PR
 
-bash
-git commit -m "Add new feature"
-Push to your forked repository:
-
-bash
-git push origin feature/<feature_name>
-Submit a pull request.
-
-License
+📜 License
 This project is licensed under the MIT License.
