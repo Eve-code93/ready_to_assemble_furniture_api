@@ -8,7 +8,7 @@ Built using **Django** and **Django REST Framework (DRF)**, it is highly scalabl
 
 ## 🌍 Live Deployment  
 The API is live and accessible here:  
-👉 [https://evecoder93.pythonanywhere.com/](https://evecoder93.pythonanywhere.com/)  
+👉 [https://evecoder93.pythonanywhere.com/swagger/](https://evecoder93.pythonanywhere.com/)  
 
 ---
 
