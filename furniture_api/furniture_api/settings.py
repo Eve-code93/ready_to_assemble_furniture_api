@@ -1,6 +1,6 @@
 """
 Django settings for furniture_api project.
-Production-ready settings for Render deployment.
+Universal config for Local, Render, and PythonAnywhere.
 """
 
 import os
@@ -11,45 +11,48 @@ import dj_database_url
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Security settings (use environment variables in production)
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-secret-key")  
+# Security settings
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost 127.0.0.1 [::1]").split()
-ALLOWED_HOSTS = ["evecoder93.pythonanywhere.com"]
 
+# Hosts
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "localhost 127.0.0.1 [::1] evecoder93.pythonanywhere.com"
+).split()
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sites',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
 
     # Third-party apps
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'django_filters',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    'drf_yasg',
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "django_filters",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
+    "drf_yasg",
 
     # Social providers
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.github",
 
     # Local apps
-    'furniture',
+    "furniture",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # For static files
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Render only (safe to leave in)
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -64,7 +67,7 @@ ROOT_URLCONF = "furniture_api.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates"],  # make sure templates/ exists
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -79,14 +82,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "furniture_api.wsgi.application"
 
-# Database (Render provides DATABASE_URL)
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True,
-    )
-}
+# Database config (handles Render + PythonAnywhere + Local)
+if "PYTHONANYWHERE_DOMAIN" in os.environ:
+    # PythonAnywhere free plan → SQLite
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    # Render or Local (Postgres via DATABASE_URL)
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.getenv("DATABASE_URL"),
+            conn_max_age=600,
+            ssl_require=True,
+        )
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -105,6 +118,7 @@ USE_TZ = True
 # Static files
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
@@ -132,7 +146,10 @@ AUTH_USER_MODEL = "furniture.User"
 SITE_ID = 1
 
 # CSRF / Security
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000").split()
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    "CSRF_TRUSTED_ORIGINS",
+    "http://localhost:8000 https://evecoder93.pythonanywhere.com"
+).split()
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 
